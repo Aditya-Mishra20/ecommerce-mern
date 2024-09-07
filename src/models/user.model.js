@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please enter your first name."],
       trim: true,
     },
-    second_name: {
+    last_name: {
       type: String,
       required: [true, "Please enter your first name."],
       trim: true,
@@ -39,11 +39,17 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    avatar: {
+      type: String, //cloudinary url
+    },
     phone_no: {
       type: String,
     },
-    dob: {
+    date_of_birth: {
       type: Date,
+    },
+    refreshToken: {
+      type: String,
     },
   },
   {
@@ -65,7 +71,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
 };
 
 userSchema.methods.generateAccessToken = function () {
-  jwt.sign(
+  return jwt.sign(
     {
       id: this._id,
       email: this.email,
