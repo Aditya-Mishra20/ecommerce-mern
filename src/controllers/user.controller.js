@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
-import uploadOnCloudinary from "../utils/cloudinary.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -19,19 +19,11 @@ const generateAccessAndRefreshToken = async (userId) => {
 
 const registerController = asyncHandler(async (req, res) => {
   //check correct data is received
-  const {
-    first_name,
-    last_name,
-    email,
-    password,
-    username,
-    phone_no,
-    date_of_birth,
-  } = req.body;
+  const { full_name, email, password, phone_no, date_of_birth } = req.body;
   // console.log(first_name, last_name, email, password, username, phone_no,date_of_birth);
 
   if (
-    [first_name, last_name, email, password, username].some((fields) => {
+    [full_name, email, password].some((fields) => {
       fields.trim() === "";
     })
   )
@@ -45,10 +37,18 @@ const registerController = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Phone number must be 10 digits");
 
   //check for user already exists
-  const userExists = await User.findOne({
-    $or: [{ username }, { email }],
-  });
+  const userExists = await User.findOne({ email });
   if (userExists) throw new ApiError(409, "User already exists");
+
+  //convert date to format(YYYY-MM-DD)
+  const dobObject = new Date(date_of_birth);
+  console.log("date", date_of_birth);
+  console.log("date", typeof date_of_birth);
+  console.log("date", typeof dobObject);
+  if (!dobObject.toISOString()) throw new ApiError(402, "invalid date format");
+
+  const updatedDOB = dobObject?.toISOString().split("T")[0];
+  console.log("updated date:", updatedDOB);
 
   // check for avatar file received
   // console.log("Avatar file path:", req.file);
@@ -60,19 +60,16 @@ const registerController = asyncHandler(async (req, res) => {
   if (!avatarUpload)
     throw new ApiError(401, "error in avatar uploading on cloudinary");
 
-  //convert date to format(DD-MM-YYYY)
-  //from frontend
-
   //create new user
   const user = await User.create({
-    first_name,
-    last_name,
-    username,
+    full_name,
     email,
     password,
+    gender: req.body.gender,
     avatar: avatarUpload.url || "",
+    isAdmin: req.body?.isAdmin || false,
     phone_no,
-    date_of_birth,
+    date_of_birth: updatedDOB,
   });
 
   // send res
@@ -86,15 +83,13 @@ const registerController = asyncHandler(async (req, res) => {
 
 const loginController = asyncHandler(async (req, res) => {
   // req.body email password from client
-  const { email, password, username } = req.body;
-  console.log(email, password, username);
+  const { email, password } = req.body;
+  console.log(email, password);
   if ([email, password].some((fields) => fields.trim() === ""))
     throw new ApiError(401, "All fields required.");
 
   // check for user existence
-  const user = await User.findOne({
-    $or: [{ email }, { username }],
-  });
+  const user = await User.findOne({ email });
   if (!user) throw new ApiError(401, "User does not exist.");
 
   // match password

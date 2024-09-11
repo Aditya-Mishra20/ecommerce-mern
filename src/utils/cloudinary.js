@@ -30,4 +30,43 @@ const uploadOnCloudinary = async (localFilePath) => {
   }
 };
 
-export default uploadOnCloudinary;
+const uploadMultipleOnCloudinary = async (localFilePaths) => {
+  const imageURLs = new Array();
+  try {
+    if (!Array.isArray(localFilePaths)) return null;
+    for (const path in localFilePaths) {
+      const response = await cloudinary.uploader.upload(localFilePaths[path], {
+        resource_type: "auto",
+      });
+      // console.log("res :", response);
+      // console.log("res URL :", response.url);
+
+      imageURLs.push(response.url);
+      fs.unlinkSync(localFilePaths[path]);
+    }
+    // console.log("image urls :", imageURLs);
+
+    return imageURLs;
+  } catch (error) {
+    for (const path in localFilePaths) fs.unlinkSync(localFilePaths[path]);
+    console.log(
+      error?.message || "error while uploading multiple images on cloudinary",
+    );
+    return null;
+  }
+};
+
+const deleteFromCloudinary = async (imagePublicStringArray) => {
+  try {
+    if (!imagePublicStringArray) return null;
+    const response = await cloudinary.v2.api.delete_resources(
+      imagePublicStringArray,
+    ); // returns json-object
+    console.log("res: ", response);
+    return response;
+  } catch (error) {
+    console.log("error while deleting images", error);
+  }
+};
+
+export { uploadOnCloudinary, uploadMultipleOnCloudinary, deleteFromCloudinary };

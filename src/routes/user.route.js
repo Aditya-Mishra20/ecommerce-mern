@@ -12,6 +12,4 @@ router.route("/login").post(loginController)
 // secured routes   
 router.route("/logout").post(verifyJWT, logoutController)
 
-
-//secured routes
 export default router;
