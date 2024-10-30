@@ -59,10 +59,10 @@ const uploadMultipleOnCloudinary = async (localFilePaths) => {
 const deleteFromCloudinary = async (imagePublicStringArray) => {
   try {
     if (!imagePublicStringArray) return null;
-    const response = await cloudinary.v2.api.delete_resources(
+    const response = await cloudinary.api.delete_resources(
       imagePublicStringArray,
     ); // returns json-object
-    console.log("res: ", response);
+    console.log(" image deleted successfully res: ", response);
     return response;
   } catch (error) {
     console.log("error while deleting images", error);

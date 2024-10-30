@@ -15,7 +15,7 @@ router.route("/getAllUsers").get(getAllUserController);
 
 router.route("/get-user/:id").get(getUserController);
 
-router.route("/delete-user/:id").get(deleteUserController);
+router.route("/delete-user/:id").delete(deleteUserController);
 
 //admin - products-CRUD
 router
@@ -25,6 +25,5 @@ router
 router
   .route("/update-product/:id")
   .post(upload.array("images", 5), updateProductController);
-// router.route("/delete-product").post(deleteProductController);
 
 export default router;

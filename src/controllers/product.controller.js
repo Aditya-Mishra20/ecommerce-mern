@@ -25,4 +25,14 @@ const getSingleProduct = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(201, "single product fetched successfully", product));
 });
-export { getLatestProducts, getSingleProduct };
+
+const getProductCategories = asyncHandler(async (req, res) => {
+  const categories = await Product.distinct("catagory");
+  
+  if (!categories) throw new ApiError(404, "categories not found");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(201, "categories fetched successfully.", categories));
+});
+export { getLatestProducts, getSingleProduct, getProductCategories };

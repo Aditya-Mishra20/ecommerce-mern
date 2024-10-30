@@ -28,6 +28,10 @@ const productSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    embeddings:{
+      type: Array,
+      
+    }
   },
   { timestamps: true },
 );

@@ -3,7 +3,10 @@ import { User } from "../models/user.model.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
-import { uploadMultipleOnCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadMultipleOnCloudinary,
+} from "../utils/cloudinary.js";
 
 // users
 const getAllUserController = asyncHandler(async (req, res) => {
@@ -15,7 +18,7 @@ const getAllUserController = asyncHandler(async (req, res) => {
 
 const getUserController = asyncHandler(async (req, res) => {
   const userId = req.params.id;
-  // console.log("user id", userId);
+  console.log("user id", userId);
   if (!userId) throw new ApiError(401, "invalid user id  ");
 
   const user = await User.findById(userId).select("-password -refreshToken");
@@ -25,9 +28,14 @@ const getUserController = asyncHandler(async (req, res) => {
 
 const deleteUserController = asyncHandler(async (req, res) => {
   const userId = req.params.id;
-  if (!userId) throw new ApiError(401, "invalid user id");
+  console.log(userId);
 
-  await User.deleteOne();
+  if (!userId) throw new ApiError(401, "invalid user id");
+  const user = await User.findById(userId).select(" avatar ");
+  if (!user) throw new ApiError(401, "cannot find avatar url");
+  console.log("url :::: ", user.avatar);
+  await deleteFromCloudinary(user.avatar);
+  // await User.deleteOne();
 
   res.status(200).json(new ApiResponse(201, "user deleted successfully", {}));
 });
@@ -44,11 +52,11 @@ const addProductController = asyncHandler(async (req, res) => {
   )
     throw new ApiError(401, `All fields are required`);
 
-  //   console.log("req.files : ", req.files);
+    // console.log("req.files : ", req.files);
   const imagesPath = req.files?.map((imgs) => {
     return imgs.path;
   });
-  //   console.log("images :", imagesPath);
+    // console.log("images :", imagesPath);
   if (!imagesPath) throw new ApiError(401, "Image field is required");
 
   const images = await uploadMultipleOnCloudinary(imagesPath);

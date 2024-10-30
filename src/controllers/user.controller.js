@@ -42,9 +42,9 @@ const registerController = asyncHandler(async (req, res) => {
 
   //convert date to format(YYYY-MM-DD)
   const dobObject = new Date(date_of_birth);
-  console.log("date", date_of_birth);
-  console.log("date", typeof date_of_birth);
-  console.log("date", typeof dobObject);
+  // console.log("date", date_of_birth);
+  // console.log("date", typeof date_of_birth);
+  // console.log("date", typeof dobObject);
   if (!dobObject.toISOString()) throw new ApiError(402, "invalid date format");
 
   const updatedDOB = dobObject?.toISOString().split("T")[0];
