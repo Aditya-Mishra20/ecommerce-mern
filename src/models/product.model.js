@@ -29,7 +29,7 @@ const productSchema = new mongoose.Schema(
       trim: true,
     },
     embeddings:{
-      type: Array,
+      type: Number,
       
     }
   },

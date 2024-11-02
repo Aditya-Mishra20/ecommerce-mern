@@ -12,6 +12,6 @@ router.route("/latest").get(getLatestProducts);
 //get single product
 router.route("/:id").get(getSingleProduct);
 
-router.route("/categories").get(getProductCategories);
+// router.route("/categories").get(getProductCategories);
 
 export default router;
