@@ -1,13 +1,21 @@
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-
-function App() {
-  
-
+import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
+import Cart from "./pages/Cart";
+const App = () => {
   return (
     <>
-      <h1 className=' text-3xl text-orange-500'>hllo</h1>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home/>} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+        </Routes>
+      </BrowserRouter>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
