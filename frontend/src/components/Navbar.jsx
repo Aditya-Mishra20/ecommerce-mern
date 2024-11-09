@@ -1,20 +1,22 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { FaBell, FaHeart, FaSearch, FaUserCircle } from "react-icons/fa";
+import { FaCartShopping } from "react-icons/fa6";
 
 const Navbar = () => {
   return (
-    <AppBar position="fixed" className=' w-full'>
-      <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="menu">
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Dashboard
-        </Typography>
-      </Toolbar>
-    </AppBar>
-  )
-}
+    <nav className=" w-full h-16 bg-slate-700 flex justify-between items-center">
+      <h3 className="text-2xl">Logo</h3>
+      <div className="flex items-center gap-3 justify-center ">
+        <input type="text" placeholder="Search..." />
+        <FaSearch />
+        <FaBell />
+        <FaUserCircle />
+        <FaHeart />
+        <FaCartShopping />
+      </div>
+    </nav>
+  );
+};
 
-export default Navbar
+export default Navbar;
