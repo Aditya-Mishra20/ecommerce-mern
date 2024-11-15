@@ -12,20 +12,25 @@ const Register = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(data);
-    const res = await axios.post("/api/v1/user/register", data);
-    console.log("response", res);
-
     try {
-      if (!res.data.success) {
-        toast.error(res.data.message  );
-      } else {
-        toast.success(res.data.message);
-      }
+      const res = await axios.post("/api/v1/user/register", data);
+      console.log("response :", res);
+      
+      toast.success(res.data.message);
       reset();
     } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong!");
+      // Check if it's an Axios error with a response
+      if (axios.isAxiosError(error) && error.response) {
+        const errorMessage =
+          error.response.data?.message || "An unexpected error occurred";
+
+          
+          // Show a toast based on the error message from the backend
+        toast.error(errorMessage);
+      } else {
+        // Handle unexpected or network errors
+        toast.error("Network error. Please check your connection.");
+      }
     }
   };
   return (

@@ -12,19 +12,21 @@ const Login = () => {
     reset,
   } = useForm();
   const onSubmit = async (data) => {
-    const res = await axios.post("/api/v1/user/login", data);
-    console.log("response", res);
-
     try {
-      if (!res.data.success) {
-        toast.error(res.data.message);
-      } else {
-        toast.success(res.data.message);
-      }
+      const res = await axios.post("/api/v1/user/login", data);
+
+      toast.success(res.data.message);
+
       reset();
     } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong!");
+      if (axios.isAxiosError(error) && error.response) {
+        const errorMessage =
+          error.response.data?.message || "An unexpected error occurred";
+
+        toast.error(errorMessage);
+      } else {
+        toast.error("Network error. Please check your connection.");
+      }
     }
   };
   return (
