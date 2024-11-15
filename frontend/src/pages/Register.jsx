@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import axios from "axios";
 const Register = () => {
   const {
@@ -10,7 +10,6 @@ const Register = () => {
     formState: { errors },
     reset,
   } = useForm();
- 
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -18,11 +17,15 @@ const Register = () => {
     console.log("response", res);
 
     try {
-      toast.success(res.data.message);
+      if (!res.data.success) {
+        toast.error(res.data.message  );
+      } else {
+        toast.success(res.data.message);
+      }
       reset();
     } catch (error) {
       console.log(error);
-      toast.error(res.data.message);
+      toast.error("Something went wrong!");
     }
   };
   return (
@@ -85,7 +88,7 @@ const Register = () => {
                 checkLength: (value) => value.length >= 6,
                 matchPattern: (value) =>
                   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(
-                    value,
+                    value
                   ),
               },
             })}
