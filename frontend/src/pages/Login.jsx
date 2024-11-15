@@ -1,6 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const {
@@ -9,9 +11,21 @@ const Login = () => {
     formState: { errors },
     reset,
   } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
-    reset();
+  const onSubmit = async (data) => {
+    const res = await axios.post("/api/v1/user/login", data);
+    console.log("response", res);
+
+    try {
+      if (!res.data.success) {
+        toast.error(res.data.message);
+      } else {
+        toast.success(res.data.message);
+      }
+      reset();
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong!");
+    }
   };
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -56,7 +70,7 @@ const Login = () => {
                 checkLength: (value) => value.length >= 6,
                 matchPattern: (value) =>
                   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(
-                    value,
+                    value
                   ),
               },
             })}
