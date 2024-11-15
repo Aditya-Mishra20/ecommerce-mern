@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 const Register = () => {
   const {
     register,
@@ -8,10 +10,20 @@ const Register = () => {
     formState: { errors },
     reset,
   } = useForm();
+ 
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
-    reset();
+    const res = await axios.post("/api/v1/user/register", data);
+    console.log("response", res);
+
+    try {
+      toast.success(res.data.message);
+      reset();
+    } catch (error) {
+      console.log(error);
+      toast.error(res.data.message);
+    }
   };
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -159,7 +171,7 @@ const Register = () => {
             Already have an account?{" "}
             <Link
               className="text-sm text-blue-500 -200 hover:underline mt-4"
-              href="#"
+              to="/login"
             >
               Login
             </Link>

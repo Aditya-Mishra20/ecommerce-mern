@@ -19,8 +19,9 @@ const generateAccessAndRefreshToken = async (userId) => {
 
 const registerController = asyncHandler(async (req, res) => {
   //check correct data is received
-  const { full_name, email, password, phone_no, date_of_birth } = req.body;
-  // console.log(first_name, last_name, email, password, username, phone_no,date_of_birth);
+  const { full_name, email, password, phone_no, date_of_birth, gender } =
+    req.body;
+  console.log(full_name, email, password, phone_no, date_of_birth);
 
   if (
     [full_name, email, password].some((fields) => {
@@ -40,6 +41,9 @@ const registerController = asyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email });
   if (userExists) throw new ApiError(409, "User already exists");
 
+  // capitalizing gender
+  const capitalGender = gender.replace(/^./, gender[0].toUpperCase());
+
   //convert date to format(YYYY-MM-DD)
   const dobObject = new Date(date_of_birth);
   // console.log("date", date_of_birth);
@@ -52,21 +56,21 @@ const registerController = asyncHandler(async (req, res) => {
 
   // check for avatar file received
   // console.log("Avatar file path:", req.file);
-  const avatarLocalPath = req.file?.path;
-  if (!avatarLocalPath) throw new ApiError(401, "cannot find avatar file path");
+  // const avatarLocalPath = req.file?.path;
+  // if (!avatarLocalPath) throw new ApiError(401, "cannot find avatar file path");
 
-  // upload avatar on cloudinary
-  const avatarUpload = await uploadOnCloudinary(avatarLocalPath);
-  if (!avatarUpload)
-    throw new ApiError(401, "error in avatar uploading on cloudinary");
+  // // upload avatar on cloudinary
+  // const avatarUpload = await uploadOnCloudinary(avatarLocalPath);
+  // if (!avatarUpload)
+  //   throw new ApiError(401, "error in avatar uploading on cloudinary");
 
   //create new user
   const user = await User.create({
     full_name,
     email,
     password,
-    gender: req.body.gender,
-    avatar: avatarUpload.url || "",
+    gender: capitalGender,
+    // avatar: avatarUpload.url || "",
     isAdmin: req.body?.isAdmin || false,
     phone_no,
     date_of_birth: updatedDOB,
