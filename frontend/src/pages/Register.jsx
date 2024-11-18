@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -10,25 +10,23 @@ const Register = () => {
     formState: { errors },
     reset,
   } = useForm();
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
       const res = await axios.post("/api/v1/user/register", data);
-      console.log("response :", res);
-      
+
+
       toast.success(res.data.message);
+      navigate("/");
       reset();
     } catch (error) {
-      // Check if it's an Axios error with a response
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
           error.response.data?.message || "An unexpected error occurred";
 
-          
-          // Show a toast based on the error message from the backend
         toast.error(errorMessage);
       } else {
-        // Handle unexpected or network errors
         toast.error("Network error. Please check your connection.");
       }
     }

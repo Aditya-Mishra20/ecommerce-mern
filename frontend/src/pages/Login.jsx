@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
@@ -11,6 +11,8 @@ const Login = () => {
     formState: { errors },
     reset,
   } = useForm();
+
+  const navigate = useNavigate();
   const onSubmit = async (data) => {
     try {
       const res = await axios.post("/api/v1/user/login", data);
@@ -18,6 +20,7 @@ const Login = () => {
       toast.success(res.data.message);
 
       reset();
+      navigate("/");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage =
