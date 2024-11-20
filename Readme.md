@@ -114,3 +114,22 @@
   End_date (date)
   Description (text)
   Status (active / inactive)
+
+## Concepts
+
+- A popular library for making HTTP requests. It's a good choice for complex requests because it offers advanced features like:
+
+- Interceptors
+- Error handling
+- Request cancellation
+
+RTK Query
+
+- Simplifies data caching, error handling, and state management. It's a good choice for React applications that need to manage server-state and optimize performance.
+- RTK Query's features include:
+
+* Automatic caching
+* Background synchronization
+* Automatic retries
+* Pagination and load more support
+* Middleware integration
