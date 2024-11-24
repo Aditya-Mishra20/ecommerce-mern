@@ -12,27 +12,27 @@ const sidebarheadings = [
     content: [
       {
         id: 1,
-        title: "Dashboard",
+        title: "Orders",
         icon: <MdSpaceDashboard />,
-        link: "/admin/dashboard",
+        link: "/admin/dashoard/orders",
       },
       {
         id: 2,
         title: "Product",
         icon: <AiFillProduct />,
-        link: "/admin/product",
+        link: "/admin/dashoard/products",
       },
       {
         id: 3,
         title: "Customer",
         icon: <BsPeopleFill />,
-        link: "/admin/customer",
+        link: "/admin/dashoard/customers",
       },
       {
         id: 4,
         title: "Transaction",
         icon: <FaMoneyCheck />,
-        link: "/admin/transaction",
+        link: "/admin/dashoard/transactions",
       },
     ],
   },
@@ -66,11 +66,6 @@ const sidebarheadings = [
     content: [
       {
         id: 1,
-        title: "Sign in",
-        icon: <MdSpaceDashboard />,
-      },
-      {
-        id: 2,
         title: "Logout",
         icon: <AiFillProduct />,
       },
@@ -81,7 +76,6 @@ const sidebarheadings = [
 const SideBar = () => {
   return (
     <>
-    
       {sidebarheadings.map(({ id, title, content }) => (
         <>
           <div className=" p-2 border-b-2 font-bold" key={id}>
